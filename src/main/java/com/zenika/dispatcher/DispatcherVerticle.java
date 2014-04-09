@@ -34,6 +34,7 @@ public class DispatcherVerticle extends PalmVerticle {
     private static Logger logger;
 
     public void start() {
+
         super.start();
         logger = container.logger();
 
@@ -58,12 +59,14 @@ public class DispatcherVerticle extends PalmVerticle {
 
         vertx.createHttpServer().requestHandler(routeMatcher).listen(8090);
 
-        container.logger().info("Dispatcher innitialisation finished");
+        logger.info("Dispatcher innitialisation finished, listening on port 8090");
 
-        vertx.eventBus().registerHandler("helloWorld1",new Handler<Message<String>>() {
+        //Purpose test
+
+        vertx.eventBus().registerHandler("helloWorld1", new Handler<Message<String>>() {
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug("Receipt in the controller 1 " + message);
+                logger.debug("Receipt in the controller 1 " + message);
                 message.reply(new PalmResponse().setBody("Hello World 1").toJSON());
 
             }
@@ -72,7 +75,7 @@ public class DispatcherVerticle extends PalmVerticle {
         vertx.eventBus().registerHandler("helloWorld2",new Handler<Message<String>>() {
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug("Receipt in the controller 2 " + message);
+                logger.debug("Receipt in the controller 2 " + message);
                 message.reply(new PalmResponse().setBody("Hello World 2").toJSON());
             }
         });
