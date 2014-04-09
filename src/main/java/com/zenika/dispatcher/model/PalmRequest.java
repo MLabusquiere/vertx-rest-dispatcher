@@ -16,7 +16,7 @@
  * @author M. Labusquière
  */
 
-package com.zenika.dispatcher;
+package com.zenika.dispatcher.model;
 
 import io.netty.handler.codec.http.HttpRequest;
 import org.vertx.java.core.http.HttpServerRequest;

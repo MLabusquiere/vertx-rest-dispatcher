@@ -18,14 +18,14 @@
 
 package com.zenika.unit;
 
-import com.zenika.dispatcher.DispatcherVerticle;
+import com.zenika.dispatcher.RestDispatcherVerticle;
 import org.junit.Test;
 
 public class BasicVerticleTest {
 
   @Test
   public void testStartAndStopVerticle() {
-    DispatcherVerticle vert = new DispatcherVerticle();
+    RestDispatcherVerticle vert = new RestDispatcherVerticle();
 
     vert.start();
     vert.stop();

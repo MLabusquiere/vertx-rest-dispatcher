@@ -18,70 +18,86 @@
 
 package com.zenika.dispatcher;
 
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
+import com.zenika.dispatcher.model.PalmResponse;
+import com.zenika.dispatcher.service.DispatcherBehaviourService;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.http.HttpServerResponse;
 import org.vertx.java.core.http.RouteMatcher;
+import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.logging.Logger;
+import org.vertx.java.platform.Verticle;
 
-/*
-This is a simple Java verticle which dispatch request to other verticle
- */
-public class DispatcherVerticle extends PalmVerticle {
+
+public class RestDispatcherVerticle extends Verticle {
+
+    private static final int DEFAULT_PORT = 8090;
+    private int port;
+
+    private static final long DEFAULT_TIME_OUT = 1000L;
+    private long timeout;
 
     //TODO dicuss about if it should be static
     private static Logger logger;
-    private static long timeout = 1000;
+
+    private DispatcherBehaviourService<Message<String>> behaviourService;
+
+    //TODO see with a injection framework, if we can do better
+    public RestDispatcherVerticle() {
+        this.behaviourService = new DispatcherBehaviourService<Message<String>>();
+    }
+
+    public RestDispatcherVerticle(DispatcherBehaviourService<Message<String>> behaviourService) {
+        this.behaviourService = behaviourService;
+    }
+
+    private void loadConfig() {
+
+        JsonObject config = container.config().getObject("rest-dispatcher-verticle");
+
+        timeout = (config.containsField("timeout")) ? config.getLong("timeout") : DEFAULT_TIME_OUT;
+        port = (config.containsField("port")) ? config.getInteger("port") : DEFAULT_PORT;
+
+    }
 
     public void start() {
 
         super.start();
         logger = container.logger();
 
+        loadConfig();
+
         final RouteMatcher routeMatcher = new RouteMatcher()
-                .all("/:moduleName/*", new Handler<HttpServerRequest>() {
+                .all(behaviourService.getRouteMatcher(), new Handler<HttpServerRequest>() {
                     public void handle(final HttpServerRequest req) {
 
                         logger.debug("Starting to handle the request : " + req.absoluteURI());
-                        PalmRequest preq = httpRequestToPalmRequest(req);
 
-                        vertx.eventBus().sendWithTimeout(getModuleName(req), preq.toJSON(), timeout,new Handler<AsyncResult<Message<String>>>() {
+                        vertx.eventBus().sendWithTimeout(behaviourService.getEventAddress(req), behaviourService.createMessageToSend(req), timeout,new Handler<AsyncResult<Message<String>>>() {
 
                             @Override
                             public void handle(AsyncResult<Message<String>> asyncResp) {
                                 if(asyncResp.succeeded())   {
-                                    HttpServerResponse response = req.response();
-                                    Message<String> message = asyncResp.result();
-                                    response.end(message.body());
+                                    behaviourService.handleResult(asyncResp.result(),req);
+                                    req.response().end();
                                 }else{
-                                    send404HttpError();
+                                    behaviourService.send404HttpError(req);
+                                    logger.warn("A client asked for a module not installed " );
                                 }
                             }
 
-                            private void send404HttpError() {
-                                String moduleName = getModuleName(req);
-                                req.response().setStatusCode(HttpResponseStatus.NOT_FOUND.code());
-                                req.response().end("The module " + moduleName + " is not installed");
-                                logger.warn("An user asked for a module not installed " + moduleName);
-                            }
                         });
 
                     }
 
-                    private String getModuleName(HttpServerRequest req) {
-                        return req.params().get("moduleName");
-                    }
                 });
 
-        vertx.createHttpServer().requestHandler(routeMatcher).listen(8090);
+        vertx.createHttpServer().requestHandler(routeMatcher).listen(port);
 
-        logger.info("Dispatcher innitialisation finished, listening on port 8090");
+        logger.info("Dispatcher innitialisation finished, listening on port " + port);
 
-        //Purpose test
+        //Test Purpose
 
         vertx.eventBus().registerHandler("helloWorld1", new Handler<Message<String>>() {
             @Override

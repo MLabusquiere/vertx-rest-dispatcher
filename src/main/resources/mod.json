@@ -1,6 +1,6 @@
 {
 
-  "main":"com.zenika.dispatcher.DispatcherVerticle",
+  "main":"com.zenika.dispatcher.RestDispatcherVerticle",
 
   "description":"Basic rest http server which dispatch request to other module",
   "licenses": ["The Apache Software License Version 2.0"],

@@ -1,0 +1,6 @@
+{
+    "rest-dispatcher-verticle" : {
+        "port": 8090,
+        "timeout": 1000
+    }
+}

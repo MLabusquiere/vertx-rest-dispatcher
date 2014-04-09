@@ -16,11 +16,10 @@
  * @author M. Labusquière
  */
 
-package com.zenika.dispatcher;
+package com.zenika.dispatcher.model;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * Created by maxence on 08/04/14.
