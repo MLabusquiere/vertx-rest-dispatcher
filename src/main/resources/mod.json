@@ -1,0 +1,13 @@
+{
+
+  "main":"com.zenika.dispatcher.DispatcherVerticle",
+
+  "description":"Basic rest http server which dispatch request to other module",
+  "licenses": ["The Apache Software License Version 2.0"],
+  "author": "Maxence Labusquière",
+
+  "developers": ["Maxence Labusquiere"],
+  "homepage": "www.zenika.com",
+
+  "auto-redeploy": true
+}
