@@ -18,6 +18,8 @@
 
 package com.zenika.dispatcher;
 
+import io.netty.handler.codec.http.HttpResponseStatus;
+import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -32,6 +34,7 @@ public class DispatcherVerticle extends PalmVerticle {
 
     //TODO dicuss about if it should be static
     private static Logger logger;
+    private static long timeout = 1000;
 
     public void start() {
 
@@ -45,13 +48,22 @@ public class DispatcherVerticle extends PalmVerticle {
                         logger.debug("Starting to handle the request : " + req.absoluteURI());
                         PalmRequest preq = httpRequestToPalmRequest(req);
 
-                        vertx.eventBus().send(req.params().get("moduleName"), preq.toJSON(), new Handler<Message<String>>() {
+                        vertx.eventBus().sendWithTimeout(req.params().get("moduleName"), preq.toJSON(), timeout,new Handler<AsyncResult<Message<String>>>() {
+
                             @Override
-                            public void handle(final Message<String> message) {
+                            public void handle(AsyncResult<Message<String>> asyncResp) {
+                                if(asyncResp.succeeded())   {
+                                    HttpServerResponse response = req.response();
+                                    Message<String> message = asyncResp.result();
+                                    response.end(message.body());
+                                }else{
+                                    send404HttpError();
+                                }
+                            }
 
-                                HttpServerResponse response = req.response();
-                                response.end(message.body());
-
+                            private void send404HttpError() {
+                                req.response().setStatusCode(HttpResponseStatus.NOT_FOUND.code());
+                                req.response().end("The module " + req.params().get("moduleName") + " is not installed");
                             }
                         });
                     }
