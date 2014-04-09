@@ -18,6 +18,7 @@
 
 package com.zenika.dispatcher;
 
+import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
@@ -48,7 +49,7 @@ public class DispatcherVerticle extends PalmVerticle {
                         logger.debug("Starting to handle the request : " + req.absoluteURI());
                         PalmRequest preq = httpRequestToPalmRequest(req);
 
-                        vertx.eventBus().sendWithTimeout(req.params().get("moduleName"), preq.toJSON(), timeout,new Handler<AsyncResult<Message<String>>>() {
+                        vertx.eventBus().sendWithTimeout(getModuleName(req), preq.toJSON(), timeout,new Handler<AsyncResult<Message<String>>>() {
 
                             @Override
                             public void handle(AsyncResult<Message<String>> asyncResp) {
@@ -62,10 +63,17 @@ public class DispatcherVerticle extends PalmVerticle {
                             }
 
                             private void send404HttpError() {
+                                String moduleName = getModuleName(req);
                                 req.response().setStatusCode(HttpResponseStatus.NOT_FOUND.code());
-                                req.response().end("The module " + req.params().get("moduleName") + " is not installed");
+                                req.response().end("The module " + moduleName + " is not installed");
+                                logger.warn("An user asked for a module not installed " + moduleName);
                             }
                         });
+
+                    }
+
+                    private String getModuleName(HttpServerRequest req) {
+                        return req.params().get("moduleName");
                     }
                 });
 
