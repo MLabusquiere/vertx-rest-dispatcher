@@ -18,36 +18,40 @@
 
 package com.zenika.dispatcher.model;
 
-import java.io.Serializable;
-import java.util.Map;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import org.vertx.java.core.json.JsonObject;
 
 /**
  * Created by maxence on 08/04/14.
  */
-public class PalmResponse implements Serializable {
-    private int statusCode = 200;
-    private static Map<String, String> headers;
-    private String body = "";
+public class PalmResponse {//TODO find a better solution
+    JsonObject jsonObject = new JsonObject();
 
-    public static Map<String, String> getHeaders() {
-        return headers;
+    public PalmResponse() {
+        setStatusCode(HttpResponseStatus.OK);
+
     }
 
-    public String body() {
-        return body;
+    public JsonObject body() {
+        return  jsonObject.getObject("body");
     }
 
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    public PalmResponse setBody(String body) {
-        this.body = body;
+    public PalmResponse setBody(JsonObject body) {
+        jsonObject.putObject("body",body);
         return this;
     }
 
-    public String toJSON() {
-        //TODO Implement
-        return body;
+    public int getStatusCode() {
+        return jsonObject.getInteger("statusCode");
     }
+
+    public PalmResponse setStatusCode(HttpResponseStatus statusCode) {
+        jsonObject.putNumber("statusCode", statusCode.code());
+        return this;
+    }
+
+    public JsonObject toJSON() {
+        return jsonObject;
+    }
+
 }

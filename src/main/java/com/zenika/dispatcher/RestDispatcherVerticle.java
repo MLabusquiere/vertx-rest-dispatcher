@@ -20,6 +20,7 @@ package com.zenika.dispatcher;
 
 import com.zenika.dispatcher.model.PalmResponse;
 import com.zenika.dispatcher.service.DispatcherBehaviourService;
+import com.zenika.dispatcher.service.IDispatcherBehaviour;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
@@ -41,14 +42,14 @@ public class RestDispatcherVerticle extends Verticle {
     //TODO dicuss about if it should be static
     private static Logger logger;
 
-    private DispatcherBehaviourService<Message<String>> behaviourService;
+    private IDispatcherBehaviour<Message<JsonObject>> behaviourService;
 
     //TODO see with a injection framework, if we can do better
     public RestDispatcherVerticle() {
-        this.behaviourService = new DispatcherBehaviourService<Message<String>>();
+        this.behaviourService = new DispatcherBehaviourService();
     }
 
-    public RestDispatcherVerticle(DispatcherBehaviourService<Message<String>> behaviourService) {
+    public RestDispatcherVerticle(DispatcherBehaviourService behaviourService) {
         this.behaviourService = behaviourService;
     }
 
@@ -74,13 +75,12 @@ public class RestDispatcherVerticle extends Verticle {
 
                         logger.debug("Starting to handle the request : " + req.absoluteURI());
 
-                        vertx.eventBus().sendWithTimeout(behaviourService.getEventAddress(req), behaviourService.createMessageToSend(req), timeout,new Handler<AsyncResult<Message<String>>>() {
+                        vertx.eventBus().sendWithTimeout(behaviourService.getEventAddress(req), behaviourService.createMessageToSend(req), timeout,new Handler<AsyncResult<Message<JsonObject>>>() {
 
                             @Override
-                            public void handle(AsyncResult<Message<String>> asyncResp) {
+                            public void handle(AsyncResult<Message<JsonObject>> asyncResp) {
                                 if(asyncResp.succeeded())   {
                                     behaviourService.handleResult(asyncResp.result(),req);
-                                    req.response().end();
                                 }else{
                                     behaviourService.send404HttpError(req);
                                     logger.warn("A client asked for a module not installed " );
@@ -99,11 +99,12 @@ public class RestDispatcherVerticle extends Verticle {
 
         //Test Purpose
 
-        vertx.eventBus().registerHandler("helloWorld1", new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler("helloWorld1", new Handler<Message<JsonObject>>() {
             @Override
-            public void handle(final Message<String> message) {
+            public void handle(final Message<JsonObject> message) {
                 logger.debug("Receipt in the controller 1 " + message);
-                message.reply(new PalmResponse().setBody("Hello World 1").toJSON());
+
+                message.reply(new PalmResponse().setBody(new JsonObject().putString("msg", "Hello World 1")).toJSON());
 
             }
         });
@@ -112,7 +113,7 @@ public class RestDispatcherVerticle extends Verticle {
             @Override
             public void handle(final Message<String> message) {
                 logger.debug("Receipt in the controller 2 " + message);
-                message.reply(new PalmResponse().setBody("Hello World 2").toJSON());
+                message.reply(new PalmResponse().setBody(new JsonObject().putString("msg","Hello World 2")).toJSON());
             }
         });
 

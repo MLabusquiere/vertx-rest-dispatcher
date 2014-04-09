@@ -18,35 +18,32 @@
 
 package com.zenika.dispatcher.model;
 
-import io.netty.handler.codec.http.HttpRequest;
+import com.zenika.dispatcher.service.IDispatcherBehaviour;
 import org.vertx.java.core.http.HttpServerRequest;
-
-import java.util.UUID;
+import org.vertx.java.core.json.JsonObject;
 
 /**
  * Created by maxence on 07/04/14.
- * Remember should be Immutable
  */
-public final class PalmRequest { //TODO implement the vert.x class to say it's shareable
+public final class PalmRequest { //TODO find a better solution
 
-    private String id = UUID.randomUUID().toString();
-    private String path;
-    private String moduleName;
+    JsonObject jsonObject = new JsonObject();
 
+    //Helper
     public PalmRequest(HttpServerRequest httpRequest) {
-        path = httpRequest.path();
-        moduleName = path;
-    }
-
-    public String getId() {
-        return id;
+        setModuleName(httpRequest.params().get(IDispatcherBehaviour.MODULE_NAME_REQ_PARAM));
     }
 
     public String getModuleName() {
-        return moduleName;
+        return jsonObject.getString("moduleName");
+    }
+
+    public void setModuleName(String moduleName)  {
+        jsonObject.putString("moduleName", moduleName);
     }
 
     public String toJSON() {
-        return null;
+        return jsonObject.toString();
     }
+
 }
