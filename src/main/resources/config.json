@@ -1,6 +1,7 @@
 {
-    "rest-dispatcher-verticle" : {
-        "port": 8090,
-        "timeout": 1000
-    }
+    "port": 8090,
+    "timeout": 1000,
+    "ssl": false,
+    "key_store_path":"store_path",
+    "key_store_password":"store_password"
 }

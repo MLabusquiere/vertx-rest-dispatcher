@@ -34,18 +34,23 @@ import org.vertx.java.platform.Verticle;
 
 public class RestDispatcherVerticle extends BusModBase {
 
-    private static final int DEFAULT_PORT = 8090;
-    private int port;
+	private static final int DEFAULT_PORT = 8090;
+	public static final String DEFAULT_KEYSTORE_PATH = "server-keystore.jks";
+	private int port;
 
-    private static final long DEFAULT_TIME_OUT = 1000L;
-    private long timeout;
+	private static final long DEFAULT_TIME_OUT = 1000L;
+	private long timeout;
+
+	public static final boolean DEFAULT_IS_SSL = false;
+	private boolean isSsl;
 
     //TODO dicuss about if it should be static
     private static Logger logger;
+	private IDispatcherBehaviour<Message<JsonObject>> behaviourService;
+	private String key_store_password;
+	private String key_store_path;
 
-    private IDispatcherBehaviour<Message<JsonObject>> behaviourService;
-
-    //TODO see with a injection framework, if we can do better
+	//TODO see with a injection framework, if we can do better
     public RestDispatcherVerticle() {
         this.behaviourService = new DispatcherBehaviourService();
     }
@@ -58,6 +63,11 @@ public class RestDispatcherVerticle extends BusModBase {
 
         timeout = getOptionalLongConfig("timeout", DEFAULT_TIME_OUT);
         port = getOptionalIntConfig("port", DEFAULT_PORT);
+		isSsl = getOptionalBooleanConfig("ssl", DEFAULT_IS_SSL);
+		if(isSsl)	{
+			key_store_password = getOptionalStringConfig("key_store_password", "DEFAULT_KEYSTORE_PWD");
+			key_store_path = getOptionalStringConfig("key_store_path", DEFAULT_KEYSTORE_PATH);
+		}
 
     }
 
