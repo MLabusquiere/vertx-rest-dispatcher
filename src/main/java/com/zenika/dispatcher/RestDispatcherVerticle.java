@@ -25,30 +25,28 @@ import org.vertx.java.busmods.BusModBase;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.logging.Logger;
-import org.vertx.java.platform.Verticle;
 
+import static com.zenika.dispatcher.DefaultConfig.*;
 
 public class RestDispatcherVerticle extends BusModBase {
 
-	private static final int DEFAULT_PORT = 8090;
-	public static final String DEFAULT_KEYSTORE_PATH = "server-keystore.jks";
 	private int port;
-
-	private static final long DEFAULT_TIME_OUT = 1000L;
 	private long timeout;
 
-	public static final boolean DEFAULT_IS_SSL = false;
-	private boolean isSsl;
-
-    //TODO dicuss about if it should be static
-    private static Logger logger;
-	private IDispatcherBehaviour<Message<JsonObject>> behaviourService;
+	boolean isSsl;
 	private String key_store_password;
 	private String key_store_path;
+
+	//TODO dicuss about if it should be static
+	private static Logger logger;
+
+	private IDispatcherBehaviour<Message<JsonObject>> behaviourService;
+
 
 	//TODO see with a injection framework, if we can do better
     public RestDispatcherVerticle() {
@@ -63,9 +61,10 @@ public class RestDispatcherVerticle extends BusModBase {
 
         timeout = getOptionalLongConfig("timeout", DEFAULT_TIME_OUT);
         port = getOptionalIntConfig("port", DEFAULT_PORT);
+
 		isSsl = getOptionalBooleanConfig("ssl", DEFAULT_IS_SSL);
 		if(isSsl)	{
-			key_store_password = getOptionalStringConfig("key_store_password", "DEFAULT_KEYSTORE_PWD");
+			key_store_password = getOptionalStringConfig("key_store_password", DEFAULT_KEYSTORE_PWD);
 			key_store_path = getOptionalStringConfig("key_store_path", DEFAULT_KEYSTORE_PATH);
 		}
 
@@ -82,7 +81,7 @@ public class RestDispatcherVerticle extends BusModBase {
                 .all(behaviourService.getRouteMatcherPattern(), new Handler<HttpServerRequest>() {
                     public void handle(final HttpServerRequest req) {
 
-                        logger.debug("Starting to handle the request : " + req.absoluteURI());
+                        logger.debug("Starting to handle the request : " + req.path());
 
                         vertx.eventBus().sendWithTimeout(behaviourService.getModuleAddress(req), behaviourService.createMessageToSend(req), timeout,new Handler<AsyncResult<Message<JsonObject>>>() {
 
@@ -100,16 +99,21 @@ public class RestDispatcherVerticle extends BusModBase {
 
                                 }
                             }
-
                         });
-
                     }
-
                 });
 
-        vertx.createHttpServer().requestHandler(routeMatcher).listen(port);
+		HttpServer httpServer = vertx.createHttpServer();
 
-        logger.info("Dispatcher innitialisation finished, listening on port " + port);
+		if(isSsl)	{
+			httpServer.setSSL(isSsl).setKeyStorePath(key_store_path).setKeyStorePassword(key_store_password);
+			logger.info("The SSL is activate");
+		}
+
+		httpServer.requestHandler(routeMatcher).listen(port);
+
+		logger.info("Dispatcher innitialisation finished, listening on port " + port);
+
 
         //Test Purpose
 
