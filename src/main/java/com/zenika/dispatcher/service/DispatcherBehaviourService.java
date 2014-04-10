@@ -29,7 +29,7 @@ public class DispatcherBehaviourService implements IDispatcherBehaviour< Message
     }
 
     @Override
-    public String getEventAddress(HttpServerRequest req) {
+    public String getModuleAddress(HttpServerRequest req) {
         return req.params().get(MODULE_NAME_REQ_PARAM);
     }
 
@@ -39,7 +39,7 @@ public class DispatcherBehaviourService implements IDispatcherBehaviour< Message
     }
 
     @Override
-    public String getRouteMatcher() {
+    public String getRouteMatcherPattern() {
         return "/:" + MODULE_NAME_REQ_PARAM + "/*";
     }
 }

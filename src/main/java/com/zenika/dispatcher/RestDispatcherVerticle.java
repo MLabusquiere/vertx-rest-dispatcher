@@ -56,7 +56,6 @@ public class RestDispatcherVerticle extends Verticle {
     private void loadConfig() {
 
         JsonObject config = container.config().getObject("rest-dispatcher-verticle");
-
         timeout = (config.containsField("timeout")) ? config.getLong("timeout") : DEFAULT_TIME_OUT;
         port = (config.containsField("port")) ? config.getInteger("port") : DEFAULT_PORT;
 
@@ -70,20 +69,25 @@ public class RestDispatcherVerticle extends Verticle {
         loadConfig();
 
         final RouteMatcher routeMatcher = new RouteMatcher()
-                .all(behaviourService.getRouteMatcher(), new Handler<HttpServerRequest>() {
+                .all(behaviourService.getRouteMatcherPattern(), new Handler<HttpServerRequest>() {
                     public void handle(final HttpServerRequest req) {
 
                         logger.debug("Starting to handle the request : " + req.absoluteURI());
 
-                        vertx.eventBus().sendWithTimeout(behaviourService.getEventAddress(req), behaviourService.createMessageToSend(req), timeout,new Handler<AsyncResult<Message<JsonObject>>>() {
+                        vertx.eventBus().sendWithTimeout(behaviourService.getModuleAddress(req), behaviourService.createMessageToSend(req), timeout,new Handler<AsyncResult<Message<JsonObject>>>() {
 
                             @Override
                             public void handle(AsyncResult<Message<JsonObject>> asyncResp) {
+
                                 if(asyncResp.succeeded())   {
+
                                     behaviourService.handleResult(asyncResp.result(),req);
+
                                 }else{
+
                                     behaviourService.send404HttpError(req);
                                     logger.warn("A client asked for a module not installed " );
+
                                 }
                             }
 

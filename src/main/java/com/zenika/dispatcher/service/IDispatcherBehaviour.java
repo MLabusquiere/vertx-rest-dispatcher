@@ -15,9 +15,9 @@ public interface IDispatcherBehaviour<T extends Message<JsonObject>> {
 
     void handleResult(T result, HttpServerRequest req);
 
-    String getEventAddress(HttpServerRequest req);
+    String getModuleAddress(HttpServerRequest req);
 
     String createMessageToSend(HttpServerRequest req);
 
-    String getRouteMatcher();
+    String getRouteMatcherPattern();
 }
