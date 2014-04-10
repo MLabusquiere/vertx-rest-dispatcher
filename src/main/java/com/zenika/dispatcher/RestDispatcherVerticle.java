@@ -57,19 +57,6 @@ public class RestDispatcherVerticle extends BusModBase {
         this.behaviourService = behaviourService;
     }
 
-    private void loadConfig() {
-
-        timeout = getOptionalLongConfig("timeout", DEFAULT_TIME_OUT);
-        port = getOptionalIntConfig("port", DEFAULT_PORT);
-
-		isSsl = getOptionalBooleanConfig("ssl", DEFAULT_IS_SSL);
-		if(isSsl)	{
-			key_store_password = getOptionalStringConfig("key_store_password", DEFAULT_KEYSTORE_PWD);
-			key_store_path = getOptionalStringConfig("key_store_path", DEFAULT_KEYSTORE_PATH);
-		}
-
-    }
-
     public void start() {
 
         super.start();
@@ -136,5 +123,18 @@ public class RestDispatcherVerticle extends BusModBase {
         });
 
     }
+
+	private void loadConfig() {
+
+		timeout = getOptionalLongConfig("timeout", DEFAULT_TIME_OUT);
+		port = getOptionalIntConfig("port", DEFAULT_PORT);
+
+		isSsl = getOptionalBooleanConfig("ssl", DEFAULT_IS_SSL);
+		if(isSsl)	{
+			key_store_password = getOptionalStringConfig("key_store_password", DEFAULT_KEYSTORE_PWD);
+			key_store_path = getOptionalStringConfig("key_store_path", DEFAULT_KEYSTORE_PATH);
+		}
+
+	}
 }
 

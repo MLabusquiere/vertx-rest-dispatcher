@@ -9,7 +9,7 @@ import org.vertx.java.core.json.JsonObject;
  */
 public interface IDispatcherBehaviour<T extends Message<JsonObject>> {
 
-    public final static String MODULE_NAME_REQ_PARAM="module_name";
+    public final static String MODULE_NAME_REQ_PARAM = "moduleName";
 
     void send404HttpError(HttpServerRequest req);
 
@@ -17,7 +17,7 @@ public interface IDispatcherBehaviour<T extends Message<JsonObject>> {
 
     String getModuleAddress(HttpServerRequest req);
 
-    String createMessageToSend(HttpServerRequest req);
+    JsonObject createMessageToSend(HttpServerRequest req);
 
     String getRouteMatcherPattern();
 }

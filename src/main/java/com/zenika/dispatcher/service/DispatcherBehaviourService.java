@@ -1,6 +1,6 @@
 package com.zenika.dispatcher.service;
 
-import com.zenika.dispatcher.model.PalmRequest;
+import com.zenika.dispatcher.model.PalmJsonRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -8,7 +8,7 @@ import org.vertx.java.core.http.HttpServerResponse;
 import org.vertx.java.core.json.JsonObject;
 
 /**
- * Created by maxence on 09/04/14.
+ * @author M. Labusquière
  */
 public class DispatcherBehaviourService implements IDispatcherBehaviour< Message<JsonObject>> {
 
@@ -34,8 +34,8 @@ public class DispatcherBehaviourService implements IDispatcherBehaviour< Message
     }
 
     @Override
-    public String createMessageToSend(HttpServerRequest req) {
-        return new PalmRequest(req).toJSON();
+    public JsonObject createMessageToSend(HttpServerRequest req) {
+        return new PalmJsonRequest(req);
     }
 
     @Override
