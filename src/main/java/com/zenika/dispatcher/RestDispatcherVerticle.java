@@ -56,9 +56,8 @@ public class RestDispatcherVerticle extends BusModBase {
 
     private void loadConfig() {
 
-        JsonObject config = container.config().getObject("rest-dispatcher-verticle");
-        timeout = (config.containsField("timeout")) ? config.getLong("timeout") : DEFAULT_TIME_OUT;
-        port = (config.containsField("port")) ? config.getInteger("port") : DEFAULT_PORT;
+        timeout = getOptionalLongConfig("timeout", DEFAULT_TIME_OUT);
+        port = getOptionalIntConfig("port", DEFAULT_PORT);
 
     }
 
