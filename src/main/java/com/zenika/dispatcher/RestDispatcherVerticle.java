@@ -21,6 +21,7 @@ package com.zenika.dispatcher;
 import com.zenika.dispatcher.model.PalmResponse;
 import com.zenika.dispatcher.service.DispatcherBehaviourService;
 import com.zenika.dispatcher.service.IDispatcherBehaviour;
+import org.vertx.java.busmods.BusModBase;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
@@ -31,7 +32,7 @@ import org.vertx.java.core.logging.Logger;
 import org.vertx.java.platform.Verticle;
 
 
-public class RestDispatcherVerticle extends Verticle {
+public class RestDispatcherVerticle extends BusModBase {
 
     private static final int DEFAULT_PORT = 8090;
     private int port;
