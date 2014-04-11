@@ -6,6 +6,6 @@
 
 #### Help for IntelliJ configuration Setup
 
-Main Class : org.vertx.java.platform.impl.cli.Starter
-VM options : -Dorg.vertx.logger-delegate-factory-class-name=org.vertx.java.core.logging.impl.Log4jLogDelegateFactory
-Program Arguments runmod com.zenika~rest-dispatcher-servlet~0.1 -conf mods/com.zenika~rest-dispatcher-verticle~0.1/config.json
+- Main Class : org.vertx.java.platform.impl.cli.Starter
+- VM options : -Dorg.vertx.logger-delegate-factory-class-name=org.vertx.java.core.logging.impl.Log4jLogDelegateFactory
+- Program Arguments runmod com.zenika~rest-dispatcher-servlet~0.1 -conf mods/com.zenika~rest-dispatcher-verticle~0.1/config.json
