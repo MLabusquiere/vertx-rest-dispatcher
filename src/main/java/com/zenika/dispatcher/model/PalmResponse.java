@@ -16,6 +16,8 @@
 
 package com.zenika.dispatcher.model;
 
+import org.vertx.java.core.json.JsonObject;
+
 /**
  * @author M. Labusquière
  */
@@ -24,5 +26,5 @@ public interface PalmResponse {
 	String CONTENT_FIELD_NAME = "content";
 
 	int getStatusCode();
-	String getContent();
+	JsonObject getContent();
 }

@@ -28,7 +28,7 @@ public class DispatcherBehaviourService implements IDispatcherBehaviour {
         HttpServerResponse response = req.response();
 		PalmResponse jsonResponse = new PalmJsonResponseReader(busResult.body());
 		response.setStatusCode(jsonResponse.getStatusCode());
-        response.end(jsonResponse.getContent());
+        response.end(jsonResponse.getContent().toString());
     }
 
     @Override

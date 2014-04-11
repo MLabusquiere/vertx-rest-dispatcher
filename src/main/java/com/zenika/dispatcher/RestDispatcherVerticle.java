@@ -94,7 +94,7 @@ public class RestDispatcherVerticle extends BusModBase {
 
 		if(isSsl)	{
 			httpServer.setSSL(isSsl).setKeyStorePath(key_store_path).setKeyStorePassword(key_store_password);
-			logger.info("The SSL is activate");
+			logger.info("The SSL on the http server is activate");
 		}
 
 		httpServer.requestHandler(routeMatcher).listen(port);

@@ -35,8 +35,8 @@ public class PalmJsonResponseReader implements PalmResponse {
 	}
 
 	@Override
-	public String getContent()	{
-		return wrappedJson.getString(CONTENT_FIELD_NAME);
+	public JsonObject getContent()	{
+		return wrappedJson.getObject(CONTENT_FIELD_NAME);
 	}
 
 }

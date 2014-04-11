@@ -25,13 +25,23 @@ import org.vertx.java.core.json.JsonObject;
  */
 public class PalmJsonResponse extends JsonObject implements PalmResponse	{
 
-	public PalmJsonResponse(String content, int status) {
+	public static final String UNIQUE_STRING_FIELD_NAME = "message";
+
+	public PalmJsonResponse(JsonObject content, int status) {
 		putNumber(STATUS_FIELD_NAME, Integer.valueOf(status));
-		putString(CONTENT_FIELD_NAME, content);
+		putObject(CONTENT_FIELD_NAME, content);
+	}
+
+	public PalmJsonResponse(JsonObject body) {
+		this(body, 200);
+	}
+
+	public PalmJsonResponse(String body, int status) {
+		this(new JsonObject().putString(UNIQUE_STRING_FIELD_NAME,body), status);
 	}
 
 	public PalmJsonResponse(String body) {
-		this(body, 200);
+		this(new JsonObject().putString(UNIQUE_STRING_FIELD_NAME,body), 200);
 	}
 
 	@Override
@@ -40,8 +50,8 @@ public class PalmJsonResponse extends JsonObject implements PalmResponse	{
 	}
 
 	@Override
-	public String getContent()	{
-		return getString(CONTENT_FIELD_NAME);
+	public JsonObject getContent()	{
+		return getObject(CONTENT_FIELD_NAME);
 	}
 
 }
