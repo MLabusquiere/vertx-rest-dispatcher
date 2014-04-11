@@ -32,12 +32,11 @@ import java.util.Set;
 /**
  * @author M. Labusquière
  */
-public final class PalmJsonRequest extends JsonObject { //TODO find a better solution
+public final class PalmJsonRequest extends JsonObject {
 
 	public PalmJsonRequest(HttpServerRequest request)	{
 
 		super();
-
 		this.putString("path",request.path());
 		this.putString("method", request.method());
 		this.putObject("headers", serializeMultiMap(request.headers()));

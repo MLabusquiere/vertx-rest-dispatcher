@@ -1,6 +1,9 @@
 package com.zenika.dispatcher.service;
 
 import com.zenika.dispatcher.model.PalmJsonRequest;
+import com.zenika.dispatcher.model.PalmJsonResponse;
+import com.zenika.dispatcher.model.PalmJsonResponseReader;
+import com.zenika.dispatcher.model.PalmResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -10,7 +13,7 @@ import org.vertx.java.core.json.JsonObject;
 /**
  * @author M. Labusquière
  */
-public class DispatcherBehaviourService implements IDispatcherBehaviour< Message<JsonObject>> {
+public class DispatcherBehaviourService implements IDispatcherBehaviour {
 
 
     @Override
@@ -21,11 +24,11 @@ public class DispatcherBehaviourService implements IDispatcherBehaviour< Message
     }
 
     @Override
-    public void handleResult(Message<JsonObject> result, HttpServerRequest req) {
+    public void handleResult(Message<JsonObject> busResult, HttpServerRequest req) {
         HttpServerResponse response = req.response();
-        JsonObject body = result.body();
-        response.setStatusCode(body.getInteger("statusCode"));
-        response.end(body.getObject("body").toString());
+		PalmResponse jsonResponse = new PalmJsonResponseReader(busResult.body());
+		response.setStatusCode(jsonResponse.getStatusCode());
+        response.end(jsonResponse.getContent());
     }
 
     @Override
@@ -42,4 +45,5 @@ public class DispatcherBehaviourService implements IDispatcherBehaviour< Message
     public String getRouteMatcherPattern() {
         return "/:" + MODULE_NAME_REQ_PARAM + "/*";
     }
+
 }

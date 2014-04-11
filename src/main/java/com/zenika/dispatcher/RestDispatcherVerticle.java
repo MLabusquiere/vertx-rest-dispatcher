@@ -18,7 +18,7 @@
 
 package com.zenika.dispatcher;
 
-import com.zenika.dispatcher.model.PalmResponse;
+import com.zenika.dispatcher.model.PalmJsonResponse;
 import com.zenika.dispatcher.service.DispatcherBehaviourService;
 import com.zenika.dispatcher.service.IDispatcherBehaviour;
 import org.vertx.java.busmods.BusModBase;
@@ -45,7 +45,7 @@ public class RestDispatcherVerticle extends BusModBase {
 	//TODO dicuss about if it should be static
 	private static Logger logger;
 
-	private IDispatcherBehaviour<Message<JsonObject>> behaviourService;
+	private IDispatcherBehaviour behaviourService;
 
 
 	//TODO see with a injection framework, if we can do better
@@ -109,7 +109,7 @@ public class RestDispatcherVerticle extends BusModBase {
             public void handle(final Message<JsonObject> message) {
                 logger.debug("Receipt in the controller 1 " + message);
 
-                message.reply(new PalmResponse().setBody(new JsonObject().putString("msg", "Hello World 1")).toJSON());
+                message.reply(new PalmJsonResponse("Hello World 1"));
 
             }
         });
@@ -118,8 +118,8 @@ public class RestDispatcherVerticle extends BusModBase {
             @Override
             public void handle(final Message<String> message) {
                 logger.debug("Receipt in the controller 2 " + message);
-                message.reply(new PalmResponse().setBody(new JsonObject().putString("msg","Hello World 2")).toJSON());
-            }
+				message.reply(new PalmJsonResponse("Hello World 2"));
+			}
         });
 
     }

@@ -16,13 +16,27 @@
 
 package com.zenika.dispatcher.model;
 
+import org.vertx.java.core.json.JsonObject;
+
 /**
  * @author M. Labusquière
  */
-public interface PalmResponse {
-	String STATUS_FIELD_NAME = "status";
-	String CONTENT_FIELD_NAME = "content";
+public class PalmJsonResponseReader implements PalmResponse {
 
-	int getStatusCode();
-	String getContent();
+	JsonObject wrappedJson;
+
+	public PalmJsonResponseReader(JsonObject wrappedJson) {
+		this.wrappedJson = wrappedJson;
+	}
+
+	@Override
+	public int getStatusCode() {
+		return wrappedJson.getInteger(STATUS_FIELD_NAME);
+	}
+
+	@Override
+	public String getContent()	{
+		return wrappedJson.getString(CONTENT_FIELD_NAME);
+	}
+
 }
