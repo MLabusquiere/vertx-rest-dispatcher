@@ -16,7 +16,7 @@
  * @author M. Labusquière
  */
 
-package com.zenika.dispatcher.model;
+package com.zenika.vertx.app.dispatcher.model;
 
 import org.vertx.java.core.json.JsonObject;
 

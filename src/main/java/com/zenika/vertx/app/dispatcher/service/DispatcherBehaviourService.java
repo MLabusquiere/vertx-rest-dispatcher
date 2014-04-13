@@ -1,9 +1,8 @@
-package com.zenika.dispatcher.service;
+package com.zenika.vertx.app.dispatcher.service;
 
-import com.zenika.dispatcher.model.PalmJsonRequest;
-import com.zenika.dispatcher.model.PalmJsonResponse;
-import com.zenika.dispatcher.model.PalmJsonResponseReader;
-import com.zenika.dispatcher.model.PalmResponse;
+import com.zenika.vertx.app.dispatcher.model.PalmJsonRequest;
+import com.zenika.vertx.app.dispatcher.model.PalmJsonResponseReader;
+import com.zenika.vertx.app.dispatcher.model.PalmResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;

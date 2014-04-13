@@ -16,11 +16,11 @@
  * @author M. Labusquière
  */
 
-package com.zenika.dispatcher;
+package com.zenika.vertx.app.dispatcher;
 
-import com.zenika.dispatcher.model.PalmJsonResponse;
-import com.zenika.dispatcher.service.DispatcherBehaviourService;
-import com.zenika.dispatcher.service.IDispatcherBehaviour;
+import com.zenika.vertx.app.dispatcher.model.PalmJsonResponse;
+import com.zenika.vertx.app.dispatcher.service.DispatcherBehaviourService;
+import com.zenika.vertx.app.dispatcher.service.IDispatcherBehaviour;
 import org.vertx.java.busmods.BusModBase;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
@@ -31,7 +31,7 @@ import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.logging.Logger;
 
-import static com.zenika.dispatcher.DefaultConfig.*;
+import static com.zenika.vertx.app.dispatcher.DefaultConfig.*;
 
 public class RestDispatcherVerticle extends BusModBase {
 
@@ -108,9 +108,7 @@ public class RestDispatcherVerticle extends BusModBase {
             @Override
             public void handle(final Message<JsonObject> message) {
                 logger.debug("Receipt in the controller 1 " + message);
-
                 message.reply(new PalmJsonResponse("Hello World 1"));
-
             }
         });
 

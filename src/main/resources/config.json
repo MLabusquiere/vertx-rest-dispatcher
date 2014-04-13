@@ -1,7 +1,20 @@
 {
-    "port": 8090,
-    "timeout": 1000,
-    "ssl": false,
-    "key_store_path":"server-keystore.jks",
-    "key_store_password":"wibble"
+    "app_starter" : {
+        "mods":[],
+        "verticles":[
+            {
+            "main":"com.zenika.vertx.app.dispatcher.RestDispatcherVerticle",
+            "conf":"rest-dispatcher-verticle",
+            "instance":1
+            }
+        ]
+    },
+
+    "rest-dispatcher-verticle" : {
+        "port": 8091,
+        "timeout": 1000,
+        "ssl": false,
+        "key_store_path":"server-keystore.jks",
+        "key_store_password":"wibble"
+    }
 }

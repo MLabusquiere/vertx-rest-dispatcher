@@ -16,18 +16,12 @@
  * @author M. Labusquière
  */
 
-package com.zenika.dispatcher.model;
+package com.zenika.vertx.app.dispatcher.model;
 
-import com.zenika.dispatcher.service.IDispatcherBehaviour;
 import org.vertx.java.core.MultiMap;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author M. Labusquière

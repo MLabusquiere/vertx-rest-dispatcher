@@ -5,31 +5,26 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * 	http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an "AS IS" BASIS
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * @author M. Labusquière
  */
 
-package com.zenika.unit;
+package com.zenika.vertx.app.dispatcher.model;
 
-import com.zenika.dispatcher.RestDispatcherVerticle;
-import org.junit.Test;
+import org.vertx.java.core.json.JsonObject;
 
-public class BasicVerticleTest {
+/**
+ * @author M. Labusquière
+ */
+public interface PalmResponse {
+	String STATUS_FIELD_NAME = "status";
+	String CONTENT_FIELD_NAME = "content";
 
-  @Test
-  public void testStartAndStopVerticle() {
-    RestDispatcherVerticle vert = new RestDispatcherVerticle();
-    /*
-        vert.start();
-        vert.stop();
-    */
-
-  }
+	int getStatusCode();
+	JsonObject getContent();
 }

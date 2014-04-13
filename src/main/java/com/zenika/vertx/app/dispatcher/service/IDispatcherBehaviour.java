@@ -1,6 +1,5 @@
-package com.zenika.dispatcher.service;
+package com.zenika.vertx.app.dispatcher.service;
 
-import com.zenika.dispatcher.model.PalmJsonResponse;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.JsonObject;

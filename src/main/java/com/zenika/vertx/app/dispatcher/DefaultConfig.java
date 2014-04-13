@@ -15,7 +15,7 @@
  *
  */
 
-package com.zenika.dispatcher;
+package com.zenika.vertx.app.dispatcher;
 
 /**
  * @author M. Labusquière
